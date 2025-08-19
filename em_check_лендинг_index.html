@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EM Check — проверка поискового запроса на риск ЭМ</title>
+  <meta name="description" content="EM Check подсказывает, несёт ли ваш поисковый запрос риск совпадения с перечнями экстремистских материалов/организаций до того, как вы нажмёте Enter." />
+  <!-- Open Graph для красивых превью в соцсетях -->
+  <meta property="og:title" content="EM Check — безопасный поиск" />
+  <meta property="og:description" content="Проверьте запрос на риск совпадения с перечнями ЭМ до поиска." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com" />
+  <meta property="og:image" content="https://example.com/og-image.png" />
+  <style>
+    :root{
+      --bg:#0b1020; --card:#121832; --text:#e9ecff; --muted:#9aa3c7; --accent:#6ea8fe; --ok:#61d095; --warn:#ffd166; --bad:#ef476f;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif; color:var(--text); background:radial-gradient(1000px 600px at 20% -10%,#24316433,transparent), radial-gradient(1000px 600px at 100% 10%,#1f284733,transparent), var(--bg)}
+    .wrap{max-width:1080px; margin:0 auto; padding:24px}
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:16px}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700}
+    .brand .dot{width:12px;height:12px;border-radius:50%;background:var(--accent); box-shadow:0 0 18px #6ea8fe77}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:999px; background:linear-gradient(90deg,#6ea8fe,#88b5ff); color:#08132b; font-weight:700; text-decoration:none; border:none; cursor:pointer}
+    .btn.outline{background:transparent; color:var(--text); border:1px solid #2a3766}
+    .grid{display:grid; gap:16px}
+    .hero{display:grid; gap:16px; grid-template-columns:1.2fr 1fr; align-items:center; padding:32px 0}
+    .card{background:linear-gradient(180deg,#121832,#0f1530); border:1px solid #1c2347; border-radius:16px; padding:18px}
+    .muted{color:var(--muted)}
+    h1{font-size:42px; line-height:1.1; margin:0}
+    h2{font-size:28px; line-height:1.2; margin:8px 0 12px}
+    .hero p{font-size:18px}
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{border:1px solid #2a3766; padding:6px 10px; border-radius:999px; color:#c8d4ff}
+    .bento{display:grid; grid-template-columns:repeat(12,1fr); gap:16px}
+    .bento > *{min-height:120px}
+    .b1{grid-column:span 6}
+    .b2{grid-column:span 6}
+    .b3{grid-column:span 4}
+    .b4{grid-column:span 4}
+    .b5{grid-column:span 4}
+    .stat{display:flex; align-items:center; gap:10px}
+    .stat .dot{width:10px;height:10px;border-radius:50%}
+    .kpi{font-weight:800}
+    .how{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+    .how .num{width:32px;height:32px;border-radius:50%; background:#2a3766; display:grid; place-items:center; font-weight:700}
+    .cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:12px}
+    .faq details{background:#0e1430; border:1px solid #1b244a; border-radius:12px; padding:12px}
+    .faq summary{cursor:pointer; font-weight:600}
+    footer{opacity:.8; font-size:14px; padding:32px 0}
+    .video iframe{width:100%; aspect-ratio:16/9; border:0; border-radius:12px}
+    .badge{padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #2a3766; color:#b9c6ff}
+    .table{width:100%; border-collapse:collapse}
+    .table th,.table td{padding:10px; border-bottom:1px solid #212b53; text-align:left}
+    .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+    @media (max-width:960px){ .hero{grid-template-columns:1fr} .b1,.b2,.b3,.b4,.b5{grid-column:span 12} .how{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav">
+      <div class="brand"><span class="dot" aria-hidden="true"></span> EM Check</div>
+      <div class="cta">
+        <a class="btn outline" href="#demo">Демо</a>
+        <a class="btn" href="#try">Попробовать</a>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero">
+      <div class="card">
+        <span class="badge">Справочный сервис • не юр. консультация</span>
+        <h1 id="hero">Проверьте запрос на риск <span class="muted">до</span> поиска</h1>
+        <p>EM Check подсказывает, может ли ваш текст совпасть с перечнями экстремистских материалов/организаций и даёт ссылку на первоисточник. Безопасно. Быстро. Анонимно.</p>
+        <div class="cta">
+          <a class="btn" href="#try">Проверить запрос</a>
+          <a class="btn outline" href="#videos">Смотреть как работает</a>
+        </div>
+        <div class="chips" style="margin-top:10px">
+          <span class="chip">Web</span>
+          <span class="chip">Telegram‑бот</span>
+          <span class="chip">Источники обновляются</span>
+          <span class="chip">Lucene + Fuzzy‑поиск</span>
+        </div>
+      </div>
+      <div class="card bento" role="region" aria-label="Было/стало">
+        <div class="b1 stat"><span class="dot bad" style="background:var(--bad)"></span><div><div class="muted">Было</div><div>Не знаю, можно ли искать эту тему</div></div></div>
+        <div class="b2 stat"><span class="dot ok" style="background:var(--ok)"></span><div><div class="muted">Стало</div><div class="kpi">Понимаю риск заранее + ссылка на источник</div></div></div>
+        <div class="b3">
+          <h3 style="margin:0 0 6px">Риск до клика</h3>
+          <p class="muted">Покажем статус: <span class="ok">нет</span> / <span class="warn">низкий</span> / <span class="warn">средний</span> / <span class="bad">высокий</span>.</p>
+        </div>
+        <div class="b4">
+          <h3 style="margin:0 0 6px">Подсветка совпадений</h3>
+          <p class="muted">Вы увидите, с чем совпал запрос, и ссылку на первоисточник.</p>
+        </div>
+        <div class="b5">
+          <h3 style="margin:0 0 6px">Без логов по умолчанию</h3>
+          <p class="muted">Запросы не сохраняются. Можно использовать телеграм‑бота.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Как это работает -->
+    <section class="how" aria-labelledby="how" id="demo">
+      <div class="card">
+        <div class="num" aria-hidden="true">1</div>
+        <h2 id="how">Как это работает</h2>
+        <p><strong>Введите запрос</strong> на сайте или в Telegram‑боте. Мы нормализуем текст и ищем совпадения в локальном индексе, собранном из официальных источников.</p>
+      </div>
+      <div class="card">
+        <div class="num" aria-hidden="true">2</div>
+        <h2>Получите статус риска</h2>
+        <p>Покажем риск и <strong>конкретные совпадения</strong> со ссылками на источники — прозрачно и объяснимо.</p>
+      </div>
+      <div class="card">
+        <div class="num" aria-hidden="true">3</div>
+        <h2>Решите, что делать</h2>
+        <p>Если риска нет — переходите к поиску в Google/Yandex. Если риск есть — прочитайте источник и действуйте осторожно.</p>
+      </div>
+    </section>
+
+    <!-- Видео: было/стало, демо веба, демо бота -->
+    <section class="grid" id="videos" style="margin-top:24px">
+      <h2 style="margin:0 0 8px">Короткие видео</h2>
+      <p class="muted">Замените VIDEO_ID на свои. Можно загрузить видео в YouTube «доступ по ссылке» и вставить код.</p>
+      <div class="grid" style="grid-template-columns:1fr 1fr; gap:16px">
+        <div class="card video"><iframe title="Было → Стало" src="https://www.youtube.com/embed/VIDEO_ID_1" allowfullscreen></iframe></div>
+        <div class="card video"><iframe title="Демо веб‑версии" src="https://www.youtube.com/embed/VIDEO_ID_2" allowfullscreen></iframe></div>
+        <div class="card video" style="grid-column:1/-1"><iframe title="Демо Telegram‑бота" src="https://www.youtube.com/embed/VIDEO_ID_3" allowfullscreen></iframe></div>
+      </div>
+    </section>
+
+    <!-- Посадочная матрица (боль → решение) -->
+    <section class="card" style="margin-top:24px" aria-labelledby="matrix">
+      <h2 id="matrix">Посадочная матрица: было плохо → стало хорошо</h2>
+      <table class="table" aria-label="Матрица боли и решений">
+        <thead><tr><th>Боль/Риск</th><th>Что даёт EM Check</th></tr></thead>
+        <tbody>
+          <tr><td>Страшно случайно перейти грань закона при обычном поиске</td><td>Предупреждение о риске до поиска + ссылка на первоисточник</td></tr>
+          <tr><td>Списки и формулировки меняются</td><td>Регулярное обновление источников и прозрачная ссылка на них</td></tr>
+          <tr><td>Непонятно, почему «риск»</td><td>Подсветка совпавших терминов/названий</td></tr>
+          <tr><td>Не хочется оставлять следы</td><td>Запросы не сохраняются по умолчанию, есть вариант с телеграм‑ботом</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- CTA: Попробовать -->
+    <section class="card" id="try" style="margin-top:24px">
+      <h2>Попробовать EM Check</h2>
+      <p class="muted">Откроется веб‑версия. Телеграм‑бот доступен по ссылке ниже.</p>
+      <div class="cta">
+        <a class="btn" href="https://app.example/emcheck" target="_blank" rel="noopener">Открыть веб‑версию</a>
+        <a class="btn outline" href="https://t.me/your_bot" target="_blank" rel="noopener">Открыть Telegram‑бота</a>
+      </div>
+    </section>
+
+    <!-- Где писать статьи -->
+    <section class="card" style="margin-top:24px" aria-labelledby="articles">
+      <h2 id="articles">Где написать статью и сослаться на лендинг</h2>
+      <ul>
+        <li><strong>VC.ru</strong> — кейс/анонс с ссылкой на лендинг (используйте UTM‑метки).</li>
+        <li><strong>Хабр</strong> — техническая статья (как устроен поиск/индексирование).</li>
+        <li><strong>Дзен</strong> — простое объяснение для широкой аудитории.</li>
+        <li><strong>Telegram</strong> — посты в своём канале и подборки у партнёров.</li>
+        <li><strong>Medium</strong> — короткая англоязычная заметка (если нужно).</li>
+      </ul>
+      <p class="muted">Пример ссылки с UTM: <code>https://example.com/?utm_source=vc&utm_medium=article&utm_campaign=launch</code></p>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq grid" style="margin-top:24px">
+      <details class="card"><summary>Это юридическая консультация?</summary><p>Нет. Сервис справочный и не заменяет профессиональную юридическую помощь.</p></details>
+      <details class="card"><summary>Вы храните мои запросы?</summary><p>По умолчанию — нет. Можно включить анонимную телеметрию для улучшения качества.</p></details>
+      <details class="card"><summary>Откуда данные?</summary><p>Из открытых официальных источников. Каждое совпадение сопровождается ссылкой на первоисточник.</p></details>
+    </section>
+
+    <footer class="wrap">
+      <div class="muted">© 2025 EM Check • MIT License • <a href="#" class="muted" style="text-decoration:underline">Политика приватности</a></div>
+    </footer>
+  </div>
+
+  <script>
+    // Мини‑скрипт: плавный переход к секциям и добавление UTM к внешним ссылкам
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{ const id=a.getAttribute('href').slice(1); const el=document.getElementById(id); if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'});} });
+    });
+    // Пример добавления UTM к ссылкам CTA (перед релизом поменяйте example.com)
+    const params = new URLSearchParams(window.location.search);
+    const utm = ['utm_source','utm_medium','utm_campaign','utm_content'].reduce((acc,k)=>{if(params.get(k)) acc.set(k, params.get(k)); return acc;}, new URLSearchParams());
+    if(utm.toString()){
+      document.querySelectorAll('a[rel="noopener"]').forEach(a=>{
+        try{ const u=new URL(a.href); u.searchParams.forEach((v,k)=>{}); utm.forEach((v,k)=>u.searchParams.set(k,v)); a.href=u.toString(); }catch{ }
+      });
+    }
+  </script>
+</body>
+</html>
