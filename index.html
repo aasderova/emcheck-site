@@ -4,174 +4,97 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EM Check — проверка поискового запроса на риск ЭМ</title>
-  <meta name="description" content="EM Check подсказывает, несёт ли ваш поисковый запрос риск совпадения с перечнями экстремистских материалов/организаций до того, как вы нажмёте Enter.">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="EM Check — безопасный поиск">
-  <meta property="og:description" content="Проверьте запрос на риск совпадения с перечнями ЭМ до поиска.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://example.com">
-  <meta property="og:image" content="https://example.com/og-image.png">
-
+  <meta name="description" content="EM Check подсказывает, несёт ли ваш поисковый запрос риск совпадения с перечнями экстремистских материалов/организаций до того, как вы нажмёте Enter." />
+  <meta property="og:title" content="EM Check — безопасный поиск" />
+  <meta property="og:description" content="Проверьте запрос на риск совпадения с перечнями ЭМ до поиска." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aasderova.github.io/emcheck-site/" />
+  <meta property="og:image" content="https://aasderova.github.io/emcheck-site/og-image.png" />
   <style>
     :root{
-      --bg:#0b1020;
-      --card:#121832;
-      --card-2:#0f1530;
-      --text:#e9ecff;
-      --muted:#9aa3c7;
-      --accent:#6ea8fe;
-      --ok:#61d095;
-      --warn:#ffd166;
-      --bad:#ef476f;
-      --line:#1c2347;
-      --gap:16px;
-      --radius:16px;
+      --bg:#0b1020; --card:#121832; --card2:#0f1530;
+      --text:#e9ecff; --muted:#9aa3c7; --accent:#6ea8fe;
+      --ok:#61d095; --warn:#ffd166; --bad:#ef476f;
+      --border:#1c2347; --soft:#2a3766;
+      --rd:16px; --pad:18px; --gap:16px; --section:28px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0;
-      color:var(--text);
-      background:
-        radial-gradient(1000px 600px at 20% -10%,#24316433,transparent),
-        radial-gradient(1000px 600px at 100% 10%,#1f284733,transparent),
-        var(--bg);
+      margin:0; color:var(--text);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-      line-height:1.45;
-      -webkit-font-smoothing:antialiased;
-      text-rendering:optimizeLegibility;
+      background:radial-gradient(1000px 600px at 20% -10%,#24316433,transparent),
+                 radial-gradient(1000px 600px at 100% 10%,#1f284733,transparent),
+                 var(--bg);
     }
-    a{color:inherit}
-    a:focus-visible, button:focus-visible, .btn:focus-visible{
-      outline:3px solid #9ec6ff; outline-offset:2px; border-radius:10px;
-      box-shadow:0 0 0 6px #9ec6ff22;
-    }
-
     .wrap{max-width:1080px; margin:0 auto; padding:24px}
-    .nav{display:flex; align-items:center; justify-content:space-between; gap:var(--gap)}
+    /* nav */
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:16px}
     .brand{display:flex; align-items:center; gap:10px; font-weight:700}
     .brand .dot{width:12px;height:12px;border-radius:50%;background:var(--accent); box-shadow:0 0 18px #6ea8fe77}
-
+    /* buttons + focus */
     .btn{
       display:inline-flex; align-items:center; gap:8px;
       padding:12px 16px; border-radius:999px; background:linear-gradient(90deg,#6ea8fe,#88b5ff);
-      color:#08132b; font-weight:700; text-decoration:none; border:1px solid transparent; cursor:pointer;
-      transition:transform .05s ease, box-shadow .2s ease;
+      color:#08132b; font-weight:700; text-decoration:none; border:none; cursor:pointer
     }
-    .btn:hover{transform:translateY(-1px); box-shadow:0 6px 16px #6ea8fe33}
-    .btn.outline{background:transparent; color:var(--text); border:1px solid #2a3766}
-    .btn.outline:hover{background:#1a2244}
-
-    .card{
-      background:linear-gradient(180deg,var(--card),var(--card-2));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:18px;
+    .btn.outline{background:transparent; color:var(--text); border:1px solid var(--soft)}
+    a, .btn{outline: none}
+    a:focus-visible, .btn:focus-visible{
+      outline:2px solid var(--accent); outline-offset:3px; border-radius:12px
     }
-
-    .grid{display:grid; gap:var(--gap)}
+    /* chips */
     .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{
-      border:1px solid #2a3766; padding:6px 10px; border-radius:999px; color:#c8d4ff;
-      text-decoration:none;
-    }
-    .chip:hover{background:#1a2244}
-
-    .badge{padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #2a3766; color:#b9c6ff}
-
-    h1,h2,h3{margin:0 0 8px}
-    h1{font-size:42px; line-height:1.1; letter-spacing:.2px}
-    h2{font-size:28px; line-height:1.15}
-    h3{font-size:22px; line-height:1.2}
-    p{margin:0}
+    .chip{border:1px solid var(--soft); padding:6px 10px; border-radius:999px; color:#c8d4ff}
+    /* cards / soft panels */
+    .card{background:linear-gradient(180deg,var(--card),var(--card2)); border:1px solid var(--border); border-radius:var(--rd); padding:var(--pad)}
+    .soft-panel{padding:var(--pad); border-radius:var(--rd); background:none; border:none}
+    .divider{border-top:1px solid var(--border)}
+    /* grid */
+    .grid{display:grid; gap:var(--gap)}
+    .hero{display:grid; gap:var(--gap); grid-template-columns:1.2fr 1fr; align-items:start; padding:32px 0}
+    /* typography */
     .muted{color:var(--muted)}
-
-    /* секции — общий вертикальный ритм */
-    .section{margin-top:32px}
-    .card + .card{margin-top:var(--gap)}
-    .block-gap{margin-top:24px}
-
-    /* HERO */
-    .hero{
-      display:grid; grid-template-columns:1.15fr 1fr; gap:var(--gap); align-items:stretch;
-      padding:32px 0;
-    }
-    .hero .lead{font-size:18px}
-    .hero .card{display:flex; flex-direction:column; justify-content:space-between}
-    .hero h1{margin-bottom:10px}
-    .hero .lead{margin-bottom:16px}
-
-    /* Правый блок (было / стало + выгоды) */
-    #benefits{
-      display:grid; gap:var(--gap);
-      grid-template-rows:auto 1fr;   /* шапка + низ */
-    }
-    .benefits-head{
-      display:grid; grid-template-columns:1fr 1fr; gap:var(--gap);
-      align-items:start;
-    }
-    .stat{display:flex; align-items:flex-start; gap:10px}
-    .dot{width:10px;height:10px;border-radius:50%}
-    .dot.ok{background:var(--ok)} .dot.bad{background:var(--bad)}
-
-    .benefit-cols{
-      display:grid; grid-template-columns:repeat(3,1fr); gap:var(--gap);
-      align-items:start;
-    }
-    .benefit{
-      border:1px solid #1e2650; border-radius:12px; padding:12px;
-      background:linear-gradient(180deg,#121834,#0f1530);
-      display:flex; flex-direction:column; gap:8px;
-      min-height:180px;
-    }
-    /* одинаковая высота заголовков, чтобы baseline был ровный */
-    .benefit h3{
-      min-height:2.6em;            /* ~ две строки высоты */
-      display:flex; align-items:flex-end;
-    }
-    .benefit p{line-height:1.4}
-
-    /* Шаги: цифра + заголовок в одну строку */
-    .step{
-      display:flex; align-items:center; gap:10px; margin-bottom:6px;
-    }
-    .num{
-      width:32px;height:32px;border-radius:50%; background:#2a3766; display:grid; place-items:center; font-weight:700
-    }
-
-    /* Видео */
-    .video iframe{width:100%; aspect-ratio:16/9; border:0; border-radius:12px}
-
-    /* Матрица */
+    h1{font-size:46px; line-height:1.1; margin:0 0 10px; letter-spacing:.2px}
+    h1 .accent{background:linear-gradient(90deg,#c8d4ff,#9db4ff); -webkit-background-clip:text; background-clip:text; color:transparent}
+    h2{font-size:28px; line-height:1.25; margin:8px 0 12px}
+    h3{font-size:22px; line-height:1.25; margin:0 0 6px}
+    p{margin:0}
+    .hero .sub{margin:14px 0 18px} /* ровно между заголовком и кнопкой */
+    /* stat «было/стало» */
+    .stat{display:flex; align-items:center; gap:10px}
+    .stat .dot{width:10px;height:10px;border-radius:50%; flex:0 0 auto; transform:translateY(1px)}
+    .kpi{font-weight:800}
+    .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+    /* правый блок в hero */
+    .benefits{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start}
+    .benefits > div{padding:0; border:0; background:none} /* убрали три внутренние «карточки» */
+    .benefits p{line-height:1.55; font-size:15px}
+    /* how: цифра + заголовок в одну строку */
+    .how .step h2{display:flex; align-items:center; gap:10px; margin:0 0 10px}
+    .num{width:32px;height:32px;border-radius:50%; background:var(--soft); display:grid; place-items:center; font-weight:700}
+    .how .step p{line-height:1.6}
+    /* matrix table */
     .table{width:100%; border-collapse:collapse}
-    .table th,.table td{padding:12px 10px; border-bottom:1px solid #212b53; text-align:left}
-
+    .table th,.table td{padding:12px 10px; border-bottom:1px solid var(--border); text-align:left; vertical-align:top}
     /* CTA */
-    #try .card{ text-align:center }
-    #try p { margin:8px auto 14px; color:var(--muted); max-width:56ch}
-    #try .cta{justify-content:center}
-
-    /* FAQ */
-    .faq details{background:#0e1430; border:1px solid #1b244a; border-radius:12px; padding:14px}
-    .faq summary{cursor:pointer; font-weight:600}
-
-    /* Источники */
-    #sources ul{margin:8px 0 0 18px}
-    #sources li{margin:6px 0}
-
-    /* Responsive */
+    .cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:12px}
+    .cta-note{text-align:center; margin:10px 0 14px}
+    /* sources (микродоверие) — без тяжёлой рамки */
+    #sources{margin-top:var(--section)}
+    /* footer */
+    footer{opacity:.8; font-size:14px; padding:32px 0}
+    /* responsive */
     @media (max-width:960px){
       .hero{grid-template-columns:1fr}
-      .benefit-cols{grid-template-columns:1fr}
+      .benefits{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-
     <nav class="nav">
-      <div class="brand"><span class="dot" aria-hidden="true" style="background:var(--accent)"></span> EM Check</div>
+      <div class="brand"><span class="dot" aria-hidden="true"></span> EM Check</div>
       <div class="cta">
         <a class="btn outline" href="#demo">Демо</a>
         <a class="btn" href="#try">Попробовать</a>
@@ -179,58 +102,47 @@
     </nav>
 
     <!-- HERO -->
-    <section class="hero section" aria-labelledby="hero">
+    <section class="hero" aria-labelledby="hero">
+      <!-- left -->
       <div class="card">
-        <div>
-          <span class="badge">Справочный сервис • не юр. консультация</span>
-          <h1 id="hero">Проверьте запрос <span class="muted">перед</span> поиском</h1>
-          <p class="lead muted">Вставьте текст запроса — сразу увидите оценку и ссылку на источник.</p>
+        <span class="chip muted" style="border-color:var(--soft)">Справочный сервис • не юр. консультация</span>
+        <h1 id="hero"><span class="accent">Проверьте запрос</span> перед поиском</h1>
+        <p class="muted sub">Вставьте текст запроса — сразу увидите оценку и ссылку на источник.</p>
+        <div class="cta">
+          <a class="btn" href="#try">Проверить запрос</a>
+          <a class="btn outline" href="#videos">Смотреть как работает</a>
         </div>
-
-        <div class="block-gap">
-          <div class="cta" style="display:flex; flex-wrap:wrap; gap:12px">
-            <a class="btn" href="#try">Проверить запрос</a>
-            <a class="btn outline" href="#videos">Смотреть как работает</a>
-          </div>
-
-          <div class="chips" style="margin-top:10px">
-            <span class="chip">Web</span>
-            <span class="chip">Telegram-бот</span>
-            <a class="chip" href="#sources">Источники обновляются</a>
-            <span class="chip">Lucene + Fuzzy-поиск</span>
-          </div>
+        <div class="chips" style="margin-top:10px">
+          <span class="chip">Web</span>
+          <span class="chip">Telegram-бот</span>
+          <a class="chip" href="#sources">Источники обновляются</a>
+          <span class="chip">Lucene + Fuzzy-поиск</span>
         </div>
       </div>
 
-      <!-- Правый блок: Было/Стало + выгоды -->
-      <div class="card" id="benefits" role="region" aria-label="Было/стало и ключевые преимущества">
-        <div class="benefits-head">
-          <div>
-            <div class="muted" style="margin-bottom:6px">Было</div>
-            <div class="stat">
-              <span class="dot bad" aria-hidden="true"></span>
-              <div>Не знаю, можно ли искать эту тему</div>
-            </div>
+      <!-- right -->
+      <div class="card" role="region" aria-label="Было/стало">
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <div class="stat">
+            <span class="dot bad" style="background:var(--bad)"></span>
+            <div><div class="muted">Было</div><div>Не знаю, можно ли искать эту тему</div></div>
           </div>
-          <div>
-            <div class="muted" style="margin-bottom:6px">Стало</div>
-            <div class="stat">
-              <span class="dot ok" aria-hidden="true"></span>
-              <div><strong>Оценка заранее + ссылка на источник</strong></div>
-            </div>
+          <div class="stat">
+            <span class="dot ok" style="background:var(--ok)"></span>
+            <div><div class="muted">Стало</div><div class="kpi">Оценка заранее + ссылка на источник</div></div>
           </div>
         </div>
 
-        <div class="benefit-cols">
-          <div class="benefit">
+        <div class="benefits" style="margin-top:14px">
+          <div>
             <h3>Проверка до клика</h3>
-            <p>Покажем статус риска: <span style="color:var(--ok)">нет</span> / <span style="color:var(--bad)">да</span>.</p>
+            <p>Покажем статус риска: <span class="ok">нет</span> / <span class="bad">да</span>.</p>
           </div>
-          <div class="benefit">
+          <div>
             <h3>Подсветка совпадений</h3>
             <p>Вы увидите, с чем совпал запрос, и ссылку на источник.</p>
           </div>
-          <div class="benefit">
+          <div>
             <h3>Запросы не сохраняются</h3>
             <p>По умолчанию мы не сохраняем ваши запросы. Можно использовать Telegram-бота.</p>
           </div>
@@ -239,36 +151,38 @@
     </section>
 
     <!-- Как это работает -->
-    <section class="card section" aria-labelledby="how">
+    <section class="card" id="demo" aria-labelledby="how" style="margin-top:var(--section)">
       <div class="grid" style="grid-template-columns:1fr; gap:18px">
-        <div>
-          <div class="step"><div class="num" aria-hidden="true">1</div><h2 id="how">Как это работает</h2></div>
-          <p><strong>Введите запрос</strong> на сайте или в Telegram-боте. Сверим с официальными списками и сообщим: есть ли риск — <span style="color:var(--ok)">нет</span> / <span style="color:var(--bad)">да</span>, и ссылку на источник.</p>
+        <div class="step">
+          <h2><span class="num" aria-hidden="true">1</span>Как это работает</h2>
+          <p><strong>Введите запрос</strong> на сайте или в Telegram-боте. Сверим с официальными списками и сообщим: есть ли риск — <span class="ok">нет</span> / <span class="bad">да</span>, и ссылку на источник.</p>
         </div>
-        <div>
-          <div class="step"><div class="num" aria-hidden="true">2</div><h2>Получите статус риска</h2></div>
+        <div class="divider"></div>
+        <div class="step">
+          <h2><span class="num" aria-hidden="true">2</span>Получите статус риска</h2>
           <p>Покажем риск и <strong>конкретные совпадения</strong> со ссылками на источники — прозрачно и объяснимо.</p>
         </div>
-        <div>
-          <div class="step"><div class="num" aria-hidden="true">3</div><h2>Решите, что делать</h2></div>
+        <div class="divider"></div>
+        <div class="step">
+          <h2><span class="num" aria-hidden="true">3</span>Решите, что делать</h2>
           <p>Если риска нет — переходите к поиску в Google/Yandex. Если риск есть — прочитайте источник и действуйте осторожно.</p>
         </div>
       </div>
     </section>
 
     <!-- Видео -->
-    <section class="grid section" id="videos">
+    <section class="grid" id="videos" style="margin-top:var(--section)">
       <h2 style="margin:0 0 8px">Короткие видео</h2>
       <p class="muted">Замените VIDEO_ID на свои. Можно загрузить видео в YouTube «доступ по ссылке» и вставить код.</p>
-      <div class="grid" style="grid-template-columns:1fr 1fr; gap:var(--gap)">
-        <div class="card video"><iframe title="Было → Стало" src="https://www.youtube.com/embed/VIDEO_ID_1" allowfullscreen></iframe></div>
-        <div class="card video"><iframe title="Демо веб-версии" src="https://www.youtube.com/embed/VIDEO_ID_2" allowfullscreen></iframe></div>
-        <div class="card video" style="grid-column:1/-1"><iframe title="Демо Telegram-бота" src="https://www.youtube.com/embed/VIDEO_ID_3" allowfullscreen></iframe></div>
+      <div class="grid" style="grid-template-columns:1fr 1fr; gap:16px">
+        <div class="card"><iframe title="Было → Стало" src="https://www.youtube.com/embed/VIDEO_ID_1" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0;border-radius:12px"></iframe></div>
+        <div class="card"><iframe title="Демо веб-версии" src="https://www.youtube.com/embed/VIDEO_ID_2" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0;border-radius:12px"></iframe></div>
+        <div class="card" style="grid-column:1/-1"><iframe title="Демо Telegram-бота" src="https://www.youtube.com/embed/VIDEO_ID_3" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0;border-radius:12px"></iframe></div>
       </div>
     </section>
 
-    <!-- Посадочная матрица -->
-    <section class="card section" aria-labelledby="matrix">
+    <!-- Матрица -->
+    <section class="card" style="margin-top:var(--section)" aria-labelledby="matrix">
       <h2 id="matrix">Ищите безопасно: какие риски бывают — и как их избежать</h2>
       <p class="muted">Покажем риск до поиска и дадим ссылку на источник.</p>
       <table class="table" aria-label="Матрица боли и решений">
@@ -283,30 +197,28 @@
     </section>
 
     <!-- CTA -->
-    <section class="section" id="try">
-      <div class="card">
-        <h2>Попробовать EM Check</h2>
-        <p>Откроется веб-версия. Телеграм-бот доступен по ссылке ниже.</p>
-        <div class="cta" style="display:flex; flex-wrap:wrap; gap:12px">
-          <a class="btn" href="https://app.example/emcheck" target="_blank" rel="noopener">Открыть веб-версию</a>
-          <a class="btn outline" href="https://t.me/your_bot" target="_blank" rel="noopener">Открыть Telegram-бота</a>
-        </div>
+    <section class="card" id="try" style="margin-top:var(--section)">
+      <h2>Попробовать EM Check</h2>
+      <p class="muted cta-note">Откроется веб-версия. Телеграм-бот доступен по ссылке ниже.</p>
+      <div class="cta">
+        <a class="btn" href="https://app.example/emcheck" target="_blank" rel="noopener">Открыть веб-версию</a>
+        <a class="btn outline" href="https://t.me/your_bot" target="_blank" rel="noopener">Открыть Telegram-бота</a>
       </div>
     </section>
 
-    <!-- Микродоверие: откуда данные -->
-    <section class="card section" id="sources" aria-labelledby="sources-title">
+    <!-- Микродоверие: откуда данные (без тяжёлой рамки) -->
+    <section id="sources" class="soft-panel" aria-labelledby="sources-title">
       <h2 id="sources-title">Откуда данные</h2>
-      <p class="muted">Сопоставляем запросы с открытыми официальными перечнями. Примеры источников:</p>
+      <p class="muted" style="margin:6px 0 12px">Сопоставляем запросы с открытыми официальными перечнями. Примеры источников:</p>
       <ul>
-        <li><a href="#" class="muted" style="text-decoration:underline">Официальные перечни экстремистских материалов</a></li>
-        <li><a href="#" class="muted" style="text-decoration:underline">Перечни организаций из открытых государственных источников</a></li>
-        <li>Источники регулярно обновляются; каждое совпадение сопровождается ссылкой на конкретный источник.</li>
+        <li><a href="#" class="muted">Официальные перечни экстремистских материалов</a></li>
+        <li><a href="#" class="muted">Перечни организаций из открытых государственных источников</a></li>
       </ul>
+      <p class="muted">Источники регулярно обновляются; каждое совпадение сопровождается ссылкой на конкретный источник.</p>
     </section>
 
     <!-- Где писать статьи -->
-    <section class="card section" aria-labelledby="articles">
+    <section class="card" style="margin-top:var(--section)" aria-labelledby="articles">
       <h2 id="articles">Где написать статью и сослаться на лендинг</h2>
       <ul>
         <li><strong>VC.ru</strong> — кейс/анонс с ссылкой на лендинг (используйте UTM-метки).</li>
@@ -319,36 +231,15 @@
     </section>
 
     <!-- FAQ -->
-    <section class="faq grid section">
+    <section class="grid" style="margin-top:var(--section)">
       <details class="card"><summary>Это юридическая консультация?</summary><p>Нет. Сервис справочный и не заменяет профессиональную юридическую помощь.</p></details>
       <details class="card"><summary>Вы храните мои запросы?</summary><p>По умолчанию — нет. Можно включить анонимную телеметрию для улучшения качества.</p></details>
       <details class="card"><summary>Откуда данные?</summary><p>Из открытых официальных источников. Каждое совпадение сопровождается ссылкой на источник.</p></details>
     </section>
 
-    <footer class="wrap" style="padding:32px 0; opacity:.8; font-size:14px">
+    <footer class="wrap">
       <div class="muted">© 2025 EM Check • MIT License • <a href="#" class="muted" style="text-decoration:underline">Политика приватности</a></div>
     </footer>
   </div>
-
-  <script>
-    // Плавный скролл по якорям
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click', e=>{
-        const id=a.getAttribute('href').slice(1);
-        const el=document.getElementById(id);
-        if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}) }
-      });
-    });
-
-    // Проброс UTM к внешним ссылкам CTA (если есть в URL)
-    const params = new URLSearchParams(window.location.search);
-    const utm = ['utm_source','utm_medium','utm_campaign','utm_content']
-      .reduce((acc,k)=>{ if(params.get(k)) acc.set(k, params.get(k)); return acc; }, new URLSearchParams());
-    if(utm.toString()){
-      document.querySelectorAll('a[rel="noopener"]').forEach(a=>{
-        try{ const u=new URL(a.href); utm.forEach((v,k)=>u.searchParams.set(k,v)); a.href=u.toString(); }catch{}
-      });
-    }
-  </script>
 </body>
 </html>
