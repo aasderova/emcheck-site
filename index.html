@@ -4,15 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EM Check — проверка поискового запроса на риск ЭМ</title>
-  <meta name="description" content="EM Check подсказывает, несёт ли ваш поисковый запрос риск совпадения с перечнями экстремистских материалов/организаций до того, как вы нажмёте Enter." />
+  <meta name="description" content="EM Check подсказывает, несёт ли ваш поисковый запрос риск совпадения с перечнями экстремистских материалов/организаций до того, как вы нажмёте Enter.">
+
   <!-- Open Graph -->
-  <meta property="og:title" content="EM Check — безопасный поиск" />
-  <meta property="og:description" content="Проверьте запрос на риск совпадения с перечнями ЭМ до поиска." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://example.com" />
-  <meta property="og:image" content="https://example.com/og-image.png" />
+  <meta property="og:title" content="EM Check — безопасный поиск">
+  <meta property="og:description" content="Проверьте запрос на риск совпадения с перечнями ЭМ до поиска.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://example.com">
+  <meta property="og:image" content="https://example.com/og-image.png">
+
   <style>
-    /* ========= design tokens ========= */
     :root{
       --bg:#0b1020;
       --card:#121832;
@@ -23,143 +24,154 @@
       --ok:#61d095;
       --warn:#ffd166;
       --bad:#ef476f;
-
-      --space-1:8px;
-      --space-2:12px;
-      --space-3:16px;
-      --space-4:24px;
-      --space-5:32px;
-
+      --line:#1c2347;
+      --gap:16px;
       --radius:16px;
-      --radius-pill:999px;
-
-      --fs-hero:42px;
-      --fs-h2:28px;
-      --fs-h3:20px;
-      --fs-p:16px;
-      --lh-p:1.45;  /* компактнее, но читабельно */
     }
-
-    /* ========= base ========= */
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
       color:var(--text);
       background:
         radial-gradient(1000px 600px at 20% -10%,#24316433,transparent),
         radial-gradient(1000px 600px at 100% 10%,#1f284733,transparent),
         var(--bg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      line-height:1.45;
       -webkit-font-smoothing:antialiased;
       text-rendering:optimizeLegibility;
     }
     a{color:inherit}
-    /* доступность и «премиум» — явный focus */
-    a:focus-visible, .btn:focus-visible, button:focus-visible {
-      outline:3px solid var(--accent);
-      outline-offset:3px;
-      border-radius:12px;
+    a:focus-visible, button:focus-visible, .btn:focus-visible{
+      outline:3px solid #9ec6ff; outline-offset:2px; border-radius:10px;
+      box-shadow:0 0 0 6px #9ec6ff22;
     }
 
     .wrap{max-width:1080px; margin:0 auto; padding:24px}
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:var(--gap)}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700}
+    .brand .dot{width:12px;height:12px;border-radius:50%;background:var(--accent); box-shadow:0 0 18px #6ea8fe77}
 
-    /* ========= ui atoms ========= */
-    .badge{padding:4px 10px; border-radius:var(--radius-pill); font-size:12px; border:1px solid #2a3766; color:#b9c6ff}
     .btn{
       display:inline-flex; align-items:center; gap:8px;
-      padding:12px 16px; border-radius:var(--radius-pill);
-      background:linear-gradient(90deg,#6ea8fe,#88b5ff);
-      color:#08132b; font-weight:700; text-decoration:none; border:none; cursor:pointer
+      padding:12px 16px; border-radius:999px; background:linear-gradient(90deg,#6ea8fe,#88b5ff);
+      color:#08132b; font-weight:700; text-decoration:none; border:1px solid transparent; cursor:pointer;
+      transition:transform .05s ease, box-shadow .2s ease;
     }
+    .btn:hover{transform:translateY(-1px); box-shadow:0 6px 16px #6ea8fe33}
     .btn.outline{background:transparent; color:var(--text); border:1px solid #2a3766}
-    .chip{border:1px solid #2a3766; padding:6px 10px; border-radius:var(--radius-pill); color:#c8d4ff}
+    .btn.outline:hover{background:#1a2244}
 
     .card{
       background:linear-gradient(180deg,var(--card),var(--card-2));
-      border:1px solid #1c2347;
+      border:1px solid var(--line);
       border-radius:var(--radius);
       padding:18px;
     }
 
+    .grid{display:grid; gap:var(--gap)}
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{
+      border:1px solid #2a3766; padding:6px 10px; border-radius:999px; color:#c8d4ff;
+      text-decoration:none;
+    }
+    .chip:hover{background:#1a2244}
+
+    .badge{padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #2a3766; color:#b9c6ff}
+
+    h1,h2,h3{margin:0 0 8px}
+    h1{font-size:42px; line-height:1.1; letter-spacing:.2px}
+    h2{font-size:28px; line-height:1.15}
+    h3{font-size:22px; line-height:1.2}
+    p{margin:0}
     .muted{color:var(--muted)}
-    .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
 
-    /* ========= layout ========= */
-    .nav{display:flex; align-items:center; justify-content:space-between; gap:var(--space-3)}
-    .brand{display:flex; align-items:center; gap:10px; font-weight:700}
-    .brand .dot{width:12px;height:12px;border-radius:50%;background:var(--accent); box-shadow:0 0 18px #6ea8fe77}
+    /* секции — общий вертикальный ритм */
+    .section{margin-top:32px}
+    .card + .card{margin-top:var(--gap)}
+    .block-gap{margin-top:24px}
 
+    /* HERO */
     .hero{
-      display:grid; grid-template-columns:1.2fr 1fr; align-items:start;
-      gap:var(--space-5); padding:var(--space-5) 0;
+      display:grid; grid-template-columns:1.15fr 1fr; gap:var(--gap); align-items:stretch;
+      padding:32px 0;
+    }
+    .hero .lead{font-size:18px}
+    .hero .card{display:flex; flex-direction:column; justify-content:space-between}
+    .hero h1{margin-bottom:10px}
+    .hero .lead{margin-bottom:16px}
+
+    /* Правый блок (было / стало + выгоды) */
+    #benefits{
+      display:grid; gap:var(--gap);
+      grid-template-rows:auto 1fr;   /* шапка + низ */
+    }
+    .benefits-head{
+      display:grid; grid-template-columns:1fr 1fr; gap:var(--gap);
+      align-items:start;
+    }
+    .stat{display:flex; align-items:flex-start; gap:10px}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.ok{background:var(--ok)} .dot.bad{background:var(--bad)}
+
+    .benefit-cols{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:var(--gap);
+      align-items:start;
+    }
+    .benefit{
+      border:1px solid #1e2650; border-radius:12px; padding:12px;
+      background:linear-gradient(180deg,#121834,#0f1530);
+      display:flex; flex-direction:column; gap:8px;
+      min-height:180px;
+    }
+    /* одинаковая высота заголовков, чтобы baseline был ровный */
+    .benefit h3{
+      min-height:2.6em;            /* ~ две строки высоты */
+      display:flex; align-items:flex-end;
+    }
+    .benefit p{line-height:1.4}
+
+    /* Шаги: цифра + заголовок в одну строку */
+    .step{
+      display:flex; align-items:center; gap:10px; margin-bottom:6px;
+    }
+    .num{
+      width:32px;height:32px;border-radius:50%; background:#2a3766; display:grid; place-items:center; font-weight:700
     }
 
-    /* отступы между секциями — ровная сетка */
-    section + section { margin-top: var(--space-4); }
-
-    /* ========= type ========= */
-    h1{font-size:var(--fs-hero); line-height:1.1; margin:0}
-    h2{font-size:var(--fs-h2); line-height:1.2; margin:8px 0 12px}
-    h3{font-size:var(--fs-h3); line-height:1.2; margin:0 0 8px}
-    p{font-size:var(--fs-p); line-height:var(--lh-p); margin:0}
-    /* мягкий баланс переносов — ровнее абзацы */
-    p, h1, h2, h3 { text-wrap:balance; }
-
-    /* ========= hero left ========= */
-    .hero .cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:12px}
-    .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
-
-    /* ========= hero right: было/стало + 3 выгоды ========= */
-    .benefits{
-      display:grid;
-      grid-template-columns:repeat(12,1fr);
-      gap:var(--space-4);
-      align-items:start;           /* все колонки прилипаются кверху одинаково */
-    }
-    .benefits .b1{grid-column:span 6}
-    .benefits .b2{grid-column:span 6}
-
-    /* три равные колонки строго по сетке 4/4/4 */
-    .benefits .b3, .benefits .b4, .benefits .b5{
-      grid-column:span 4;
-      display:grid;
-      grid-template-rows:auto 1fr; /* заголовок + текст — одинаковая схема */
-      gap:6px;
-    }
-    /* заголовки ровно по одной линии */
-    .benefits .b3 h3, .benefits .b4 h3, .benefits .b5 h3{
-      margin:0 0 6px;
-      font-size:var(--fs-h3);
-    }
-    /* текст компактнее и ровнее */
-    .benefits p{
-      font-size:15.5px;
-      line-height:1.45;
-      letter-spacing:0.1px;
-    }
-    /* убрать лишние «ступеньки» в коротких строках */
-    .benefits p strong { font-weight:700 }
-
-    /* ========= tables / misc ========= */
-    .table{width:100%; border-collapse:collapse}
-    .table th,.table td{padding:10px; border-bottom:1px solid #212b53; text-align:left}
-
-    /* ========= video ========= */
+    /* Видео */
     .video iframe{width:100%; aspect-ratio:16/9; border:0; border-radius:12px}
 
-    /* ========= responsive ========= */
+    /* Матрица */
+    .table{width:100%; border-collapse:collapse}
+    .table th,.table td{padding:12px 10px; border-bottom:1px solid #212b53; text-align:left}
+
+    /* CTA */
+    #try .card{ text-align:center }
+    #try p { margin:8px auto 14px; color:var(--muted); max-width:56ch}
+    #try .cta{justify-content:center}
+
+    /* FAQ */
+    .faq details{background:#0e1430; border:1px solid #1b244a; border-radius:12px; padding:14px}
+    .faq summary{cursor:pointer; font-weight:600}
+
+    /* Источники */
+    #sources ul{margin:8px 0 0 18px}
+    #sources li{margin:6px 0}
+
+    /* Responsive */
     @media (max-width:960px){
       .hero{grid-template-columns:1fr}
-      .benefits{grid-template-columns:1fr; gap:var(--space-3)}
-      .benefits .b1,.benefits .b2,.benefits .b3,.benefits .b4,.benefits .b5{grid-column:1/-1}
+      .benefit-cols{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
   <div class="wrap">
+
     <nav class="nav">
-      <div class="brand"><span class="dot" aria-hidden="true"></span> EM Check</div>
+      <div class="brand"><span class="dot" aria-hidden="true" style="background:var(--accent)"></span> EM Check</div>
       <div class="cta">
         <a class="btn outline" href="#demo">Демо</a>
         <a class="btn" href="#try">Попробовать</a>
@@ -167,81 +179,88 @@
     </nav>
 
     <!-- HERO -->
-    <section class="hero" aria-labelledby="hero">
-      <!-- left -->
+    <section class="hero section" aria-labelledby="hero">
       <div class="card">
-        <span class="badge">Справочный сервис • не юр. консультация</span>
-        <h1 id="hero">Проверьте запрос <span class="muted">перед</span> поиском</h1>
-        <p class="muted">Вставьте текст запроса — сразу увидите оценку и ссылку на источник.</p>
-
-        <div class="cta">
-          <a class="btn" href="#try">Проверить запрос</a>
-          <a class="btn outline" href="#videos">Смотреть как работает</a>
+        <div>
+          <span class="badge">Справочный сервис • не юр. консультация</span>
+          <h1 id="hero">Проверьте запрос <span class="muted">перед</span> поиском</h1>
+          <p class="lead muted">Вставьте текст запроса — сразу увидите оценку и ссылку на источник.</p>
         </div>
 
-        <div class="chips">
-          <span class="chip">Web</span>
-          <span class="chip">Telegram-бот</span>
-          <span class="chip">Источники обновляются</span>
-          <span class="chip">Lucene + Fuzzy-поиск</span>
+        <div class="block-gap">
+          <div class="cta" style="display:flex; flex-wrap:wrap; gap:12px">
+            <a class="btn" href="#try">Проверить запрос</a>
+            <a class="btn outline" href="#videos">Смотреть как работает</a>
+          </div>
+
+          <div class="chips" style="margin-top:10px">
+            <span class="chip">Web</span>
+            <span class="chip">Telegram-бот</span>
+            <a class="chip" href="#sources">Источники обновляются</a>
+            <span class="chip">Lucene + Fuzzy-поиск</span>
+          </div>
         </div>
       </div>
 
-      <!-- right -->
-      <div class="card benefits" role="region" aria-label="Было/стало и преимущества">
-        <div class="b1" style="display:flex;align-items:center;gap:10px">
-          <span class="dot bad" style="width:10px;height:10px;border-radius:50%;background:var(--bad)"></span>
+      <!-- Правый блок: Было/Стало + выгоды -->
+      <div class="card" id="benefits" role="region" aria-label="Было/стало и ключевые преимущества">
+        <div class="benefits-head">
           <div>
-            <div class="muted">Было</div>
-            <div>Не знаю, можно ли искать эту тему</div>
+            <div class="muted" style="margin-bottom:6px">Было</div>
+            <div class="stat">
+              <span class="dot bad" aria-hidden="true"></span>
+              <div>Не знаю, можно ли искать эту тему</div>
+            </div>
+          </div>
+          <div>
+            <div class="muted" style="margin-bottom:6px">Стало</div>
+            <div class="stat">
+              <span class="dot ok" aria-hidden="true"></span>
+              <div><strong>Оценка заранее + ссылка на источник</strong></div>
+            </div>
           </div>
         </div>
 
-        <div class="b2" style="display:flex;align-items:center;gap:10px">
-          <span class="dot ok" style="width:10px;height:10px;border-radius:50%;background:var(--ok)"></span>
-          <div>
-            <div class="muted">Стало</div>
-            <div style="font-weight:800">Оценка заранее + ссылка на источник</div>
+        <div class="benefit-cols">
+          <div class="benefit">
+            <h3>Проверка до клика</h3>
+            <p>Покажем статус риска: <span style="color:var(--ok)">нет</span> / <span style="color:var(--bad)">да</span>.</p>
           </div>
-        </div>
-
-        <div class="b3">
-          <h3><a href="#how" style="color:inherit;text-decoration:none">Проверка до клика</a></h3>
-          <p>Покажем статус риска: <span class="ok">нет</span> / <span class="bad">да</span>.</p>
-        </div>
-
-        <div class="b4">
-          <h3><a href="#how" style="color:inherit;text-decoration:none">Подсветка совпадений</a></h3>
-          <p>Вы увидите, с чем совпал запрос, и ссылку на источник.</p>
-        </div>
-
-        <div class="b5">
-          <h3><a href="#faq" style="color:inherit;text-decoration:none">Запросы не сохраняются</a></h3>
-          <p>По умолчанию мы не сохраняем ваши запросы. Можно использовать Telegram-бота.</p>
+          <div class="benefit">
+            <h3>Подсветка совпадений</h3>
+            <p>Вы увидите, с чем совпал запрос, и ссылку на источник.</p>
+          </div>
+          <div class="benefit">
+            <h3>Запросы не сохраняются</h3>
+            <p>По умолчанию мы не сохраняем ваши запросы. Можно использовать Telegram-бота.</p>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Как это работает -->
-    <section class="card" aria-labelledby="how" id="demo">
-      <div class="num" aria-hidden="true" style="width:32px;height:32px;border-radius:50%; background:#2a3766; display:grid; place-items:center; font-weight:700">1</div>
-      <h2 id="how">Как это работает</h2>
-      <p><strong>Введите запрос</strong> на сайте или в Telegram-боте. Сверим с официальными списками и сообщим: есть ли риск — <span class="ok">нет</span> / <span class="bad">да</span>, и ссылку на источник.</p>
-      <div style="height:var(--space-3)"></div>
-      <div class="num" aria-hidden="true" style="width:32px;height:32px;border-radius:50%; background:#2a3766; display:grid; place-items:center; font-weight:700">2</div>
-      <h2>Получите статус риска</h2>
-      <p>Покажем риск и <strong>конкретные совпадения</strong> со ссылками на источники — прозрачно и объяснимо.</p>
-      <div style="height:var(--space-3)"></div>
-      <div class="num" aria-hidden="true" style="width:32px;height:32px;border-radius:50%; background:#2a3766; display:grid; place-items:center; font-weight:700">3</div>
-      <h2>Решите, что делать</h2>
-      <p>Если риска нет — переходите к поиску в Google/Yandex. Если риск есть — прочитайте источник и действуйте осторожно.</p>
+    <section class="card section" aria-labelledby="how">
+      <div class="grid" style="grid-template-columns:1fr; gap:18px">
+        <div>
+          <div class="step"><div class="num" aria-hidden="true">1</div><h2 id="how">Как это работает</h2></div>
+          <p><strong>Введите запрос</strong> на сайте или в Telegram-боте. Сверим с официальными списками и сообщим: есть ли риск — <span style="color:var(--ok)">нет</span> / <span style="color:var(--bad)">да</span>, и ссылку на источник.</p>
+        </div>
+        <div>
+          <div class="step"><div class="num" aria-hidden="true">2</div><h2>Получите статус риска</h2></div>
+          <p>Покажем риск и <strong>конкретные совпадения</strong> со ссылками на источники — прозрачно и объяснимо.</p>
+        </div>
+        <div>
+          <div class="step"><div class="num" aria-hidden="true">3</div><h2>Решите, что делать</h2></div>
+          <p>Если риска нет — переходите к поиску в Google/Yandex. Если риск есть — прочитайте источник и действуйте осторожно.</p>
+        </div>
+      </div>
     </section>
 
     <!-- Видео -->
-    <section class="card" id="videos">
+    <section class="grid section" id="videos">
       <h2 style="margin:0 0 8px">Короткие видео</h2>
       <p class="muted">Замените VIDEO_ID на свои. Можно загрузить видео в YouTube «доступ по ссылке» и вставить код.</p>
-      <div class="video" style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-3); margin-top:var(--space-3)">
+      <div class="grid" style="grid-template-columns:1fr 1fr; gap:var(--gap)">
         <div class="card video"><iframe title="Было → Стало" src="https://www.youtube.com/embed/VIDEO_ID_1" allowfullscreen></iframe></div>
         <div class="card video"><iframe title="Демо веб-версии" src="https://www.youtube.com/embed/VIDEO_ID_2" allowfullscreen></iframe></div>
         <div class="card video" style="grid-column:1/-1"><iframe title="Демо Telegram-бота" src="https://www.youtube.com/embed/VIDEO_ID_3" allowfullscreen></iframe></div>
@@ -249,10 +268,10 @@
     </section>
 
     <!-- Посадочная матрица -->
-    <section class="card" aria-labelledby="matrix">
+    <section class="card section" aria-labelledby="matrix">
       <h2 id="matrix">Ищите безопасно: какие риски бывают — и как их избежать</h2>
       <p class="muted">Покажем риск до поиска и дадим ссылку на источник.</p>
-      <table class="table" aria-label="Матрица боли и решений" style="margin-top:8px">
+      <table class="table" aria-label="Матрица боли и решений">
         <thead><tr><th>Боль/Риск</th><th>Что даёт EM Check</th></tr></thead>
         <tbody>
           <tr><td>Страшно случайно перейти грань закона при обычном поиске</td><td>Предупреждение о риске до поиска + ссылка на источник</td></tr>
@@ -264,17 +283,30 @@
     </section>
 
     <!-- CTA -->
-    <section class="card" id="try">
-      <h2>Попробовать EM Check</h2>
-      <p class="muted">Откроется веб-версия. Телеграм-бот доступен по ссылке ниже.</p>
-      <div class="cta">
-        <a class="btn" href="https://app.example/emcheck" target="_blank" rel="noopener">Открыть веб-версию</a>
-        <a class="btn outline" href="https://t.me/your_bot" target="_blank" rel="noopener">Открыть Telegram-бота</a>
+    <section class="section" id="try">
+      <div class="card">
+        <h2>Попробовать EM Check</h2>
+        <p>Откроется веб-версия. Телеграм-бот доступен по ссылке ниже.</p>
+        <div class="cta" style="display:flex; flex-wrap:wrap; gap:12px">
+          <a class="btn" href="https://app.example/emcheck" target="_blank" rel="noopener">Открыть веб-версию</a>
+          <a class="btn outline" href="https://t.me/your_bot" target="_blank" rel="noopener">Открыть Telegram-бота</a>
+        </div>
       </div>
     </section>
 
+    <!-- Микродоверие: откуда данные -->
+    <section class="card section" id="sources" aria-labelledby="sources-title">
+      <h2 id="sources-title">Откуда данные</h2>
+      <p class="muted">Сопоставляем запросы с открытыми официальными перечнями. Примеры источников:</p>
+      <ul>
+        <li><a href="#" class="muted" style="text-decoration:underline">Официальные перечни экстремистских материалов</a></li>
+        <li><a href="#" class="muted" style="text-decoration:underline">Перечни организаций из открытых государственных источников</a></li>
+        <li>Источники регулярно обновляются; каждое совпадение сопровождается ссылкой на конкретный источник.</li>
+      </ul>
+    </section>
+
     <!-- Где писать статьи -->
-    <section class="card" aria-labelledby="articles">
+    <section class="card section" aria-labelledby="articles">
       <h2 id="articles">Где написать статью и сослаться на лендинг</h2>
       <ul>
         <li><strong>VC.ru</strong> — кейс/анонс с ссылкой на лендинг (используйте UTM-метки).</li>
@@ -287,31 +319,31 @@
     </section>
 
     <!-- FAQ -->
-    <section class="card" id="faq">
+    <section class="faq grid section">
       <details class="card"><summary>Это юридическая консультация?</summary><p>Нет. Сервис справочный и не заменяет профессиональную юридическую помощь.</p></details>
-      <details class="card" style="margin-top:12px"><summary>Вы храните мои запросы?</summary><p>По умолчанию — нет. Можно включить анонимную телеметрию для улучшения качества.</p></details>
-      <details class="card" style="margin-top:12px"><summary>Откуда данные?</summary><p>Из открытых официальных источников. Каждое совпадение сопровождается ссылкой на источник.</p></details>
+      <details class="card"><summary>Вы храните мои запросы?</summary><p>По умолчанию — нет. Можно включить анонимную телеметрию для улучшения качества.</p></details>
+      <details class="card"><summary>Откуда данные?</summary><p>Из открытых официальных источников. Каждое совпадение сопровождается ссылкой на источник.</p></details>
     </section>
 
-    <footer class="wrap" style="padding:32px 0 0">
+    <footer class="wrap" style="padding:32px 0; opacity:.8; font-size:14px">
       <div class="muted">© 2025 EM Check • MIT License • <a href="#" class="muted" style="text-decoration:underline">Политика приватности</a></div>
     </footer>
   </div>
 
   <script>
-    // плавный скролл к секциям
+    // Плавный скролл по якорям
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', e=>{
         const id=a.getAttribute('href').slice(1);
         const el=document.getElementById(id);
-        if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); }
+        if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}) }
       });
     });
 
-    // прокидываем UTM к внешним CTA (если они есть в URL)
+    // Проброс UTM к внешним ссылкам CTA (если есть в URL)
     const params = new URLSearchParams(window.location.search);
-    const utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content'];
-    const utm = utmKeys.reduce((acc,k)=>{ if(params.get(k)) acc.set(k, params.get(k)); return acc; }, new URLSearchParams());
+    const utm = ['utm_source','utm_medium','utm_campaign','utm_content']
+      .reduce((acc,k)=>{ if(params.get(k)) acc.set(k, params.get(k)); return acc; }, new URLSearchParams());
     if(utm.toString()){
       document.querySelectorAll('a[rel="noopener"]').forEach(a=>{
         try{ const u=new URL(a.href); utm.forEach((v,k)=>u.searchParams.set(k,v)); a.href=u.toString(); }catch{}
