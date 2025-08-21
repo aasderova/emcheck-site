@@ -12,30 +12,36 @@
   <meta property="og:url" content="https://example.com" />
   <meta property="og:image" content="https://example.com/og-image.png" />
   <style>
-    /* ===== Токены ===== */
+    /* ========= design tokens ========= */
     :root{
       --bg:#0b1020;
       --card:#121832;
+      --card-2:#0f1530;
       --text:#e9ecff;
       --muted:#9aa3c7;
       --accent:#6ea8fe;
-      --ok:#61d095; --warn:#ffd166; --bad:#ef476f;
+      --ok:#61d095;
+      --warn:#ffd166;
+      --bad:#ef476f;
 
-      /* шкала отступов */
-      --s-1:12px;
-      --s-2:16px;
-      --s-3:24px;
-      --s-4:40px;        /* межсекционный */
-      --s-5:64px;
+      --space-1:8px;
+      --space-2:12px;
+      --space-3:16px;
+      --space-4:24px;
+      --space-5:32px;
 
-      /* обводка фокуса */
-      --ring:#9bcbff;
-      --ring-outer:rgba(155,203,255,.28);
-      --ring-bg:#0b1020; /* цвет подложки вокруг кольца */
+      --radius:16px;
+      --radius-pill:999px;
+
+      --fs-hero:42px;
+      --fs-h2:28px;
+      --fs-h3:20px;
+      --fs-p:16px;
+      --lh-p:1.45;  /* компактнее, но читабельно */
     }
 
-    /* ===== База ===== */
-    *,*::before,*::after{box-sizing:border-box}
+    /* ========= base ========= */
+    *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
@@ -48,113 +54,105 @@
       -webkit-font-smoothing:antialiased;
       text-rendering:optimizeLegibility;
     }
+    a{color:inherit}
+    /* доступность и «премиум» — явный focus */
+    a:focus-visible, .btn:focus-visible, button:focus-visible {
+      outline:3px solid var(--accent);
+      outline-offset:3px;
+      border-radius:12px;
+    }
 
     .wrap{max-width:1080px; margin:0 auto; padding:24px}
 
-    /* ===== Навигация ===== */
-    .nav{display:flex; align-items:center; justify-content:space-between; gap:var(--s-2)}
+    /* ========= ui atoms ========= */
+    .badge{padding:4px 10px; border-radius:var(--radius-pill); font-size:12px; border:1px solid #2a3766; color:#b9c6ff}
+    .btn{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:12px 16px; border-radius:var(--radius-pill);
+      background:linear-gradient(90deg,#6ea8fe,#88b5ff);
+      color:#08132b; font-weight:700; text-decoration:none; border:none; cursor:pointer
+    }
+    .btn.outline{background:transparent; color:var(--text); border:1px solid #2a3766}
+    .chip{border:1px solid #2a3766; padding:6px 10px; border-radius:var(--radius-pill); color:#c8d4ff}
+
+    .card{
+      background:linear-gradient(180deg,var(--card),var(--card-2));
+      border:1px solid #1c2347;
+      border-radius:var(--radius);
+      padding:18px;
+    }
+
+    .muted{color:var(--muted)}
+    .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+
+    /* ========= layout ========= */
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:var(--space-3)}
     .brand{display:flex; align-items:center; gap:10px; font-weight:700}
     .brand .dot{width:12px;height:12px;border-radius:50%;background:var(--accent); box-shadow:0 0 18px #6ea8fe77}
 
-    .btn{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:12px 16px; border-radius:999px;
-      background:linear-gradient(90deg,#6ea8fe,#88b5ff);
-      color:#08132b; font-weight:700; text-decoration:none; border:none; cursor:pointer;
-      transition:transform .06s ease, filter .06s ease, box-shadow .06s ease;
-    }
-    .btn:hover{ filter:brightness(1.02) }
-    .btn:active{ transform:translateY(1px) }
-    .btn.outline{background:transparent; color:var(--text); border:1px solid #2a3766}
-
-    /* Фокус — общий */
-    :focus-visible{
-      outline:2px solid var(--ring);
-      outline-offset:2px;
-    }
-    /* Фокус — красивое «кольцо» для интерактивных */
-    a:focus-visible, button:focus-visible, .btn:focus-visible, summary:focus-visible{
-      outline:none;
-      box-shadow:
-        0 0 0 2px var(--ring-bg),
-        0 0 0 4px var(--ring),
-        0 0 0 8px var(--ring-outer);
-      border-radius:10px;
-    }
-    summary{ list-style:none }
-    summary::-webkit-details-marker{ display:none }
-
-    /* ===== Сетки и карточки ===== */
-    .grid{display:grid; gap:var(--s-3)}
-    .card{
-      background:linear-gradient(180deg,#121832,#0f1530);
-      border:1px solid #1c2347;
-      border-radius:16px;
-      padding:20px;
-    }
     .hero{
-      display:grid; gap:var(--s-3);
-      grid-template-columns:1.2fr 1fr;
-      align-items:center;
-      padding-block:var(--s-4);
+      display:grid; grid-template-columns:1.2fr 1fr; align-items:start;
+      gap:var(--space-5); padding:var(--space-5) 0;
     }
-    .muted{color:var(--muted)}
-    h1{font-size:42px; line-height:1.12; margin:0; text-wrap:balance}
-    h2{font-size:28px; line-height:1.2; margin:8px 0 12px; text-wrap:balance}
-    h3{margin:0 0 8px; text-wrap:balance}
-    p{margin:0 0 var(--s-2); line-height:1.55; text-wrap:pretty}
-    li{ line-height:1.55 }
 
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{border:1px solid #2a3766; padding:6px 10px; border-radius:999px; color:#c8d4ff}
+    /* отступы между секциями — ровная сетка */
+    section + section { margin-top: var(--space-4); }
 
-    .bento{display:grid; grid-template-columns:repeat(12,1fr); gap:var(--s-3)}
-    .bento > *{min-height:120px}
-    .b1{grid-column:span 6}
-    .b2{grid-column:span 6}
-    .b3{grid-column:span 4}
-    .b4{grid-column:span 4}
-    .b5{grid-column:span 4}
-    .stat{display:flex; align-items:center; gap:10px}
-    .stat .dot{width:10px;height:10px;border-radius:50%}
-    .kpi{font-weight:800}
+    /* ========= type ========= */
+    h1{font-size:var(--fs-hero); line-height:1.1; margin:0}
+    h2{font-size:var(--fs-h2); line-height:1.2; margin:8px 0 12px}
+    h3{font-size:var(--fs-h3); line-height:1.2; margin:0 0 8px}
+    p{font-size:var(--fs-p); line-height:var(--lh-p); margin:0}
+    /* мягкий баланс переносов — ровнее абзацы */
+    p, h1, h2, h3 { text-wrap:balance; }
 
-    .how{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-3)}
-    .how .num{width:32px;height:32px;border-radius:50%; background:#2a3766; display:grid; place-items:center; font-weight:700}
-    .cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:12px}
-    .video iframe{width:100%; aspect-ratio:16/9; border:0; border-radius:12px}
+    /* ========= hero left ========= */
+    .hero .cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:12px}
+    .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
 
-    .badge{padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #2a3766; color:#b9c6ff}
+    /* ========= hero right: было/стало + 3 выгоды ========= */
+    .benefits{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:var(--space-4);
+      align-items:start;           /* все колонки прилипаются кверху одинаково */
+    }
+    .benefits .b1{grid-column:span 6}
+    .benefits .b2{grid-column:span 6}
 
+    /* три равные колонки строго по сетке 4/4/4 */
+    .benefits .b3, .benefits .b4, .benefits .b5{
+      grid-column:span 4;
+      display:grid;
+      grid-template-rows:auto 1fr; /* заголовок + текст — одинаковая схема */
+      gap:6px;
+    }
+    /* заголовки ровно по одной линии */
+    .benefits .b3 h3, .benefits .b4 h3, .benefits .b5 h3{
+      margin:0 0 6px;
+      font-size:var(--fs-h3);
+    }
+    /* текст компактнее и ровнее */
+    .benefits p{
+      font-size:15.5px;
+      line-height:1.45;
+      letter-spacing:0.1px;
+    }
+    /* убрать лишние «ступеньки» в коротких строках */
+    .benefits p strong { font-weight:700 }
+
+    /* ========= tables / misc ========= */
     .table{width:100%; border-collapse:collapse}
     .table th,.table td{padding:10px; border-bottom:1px solid #212b53; text-align:left}
 
-    .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+    /* ========= video ========= */
+    .video iframe{width:100%; aspect-ratio:16/9; border:0; border-radius:12px}
 
-    /* ===== «Ровнее по линейке» ===== */
-    /* ограничение ширины только в hero */
-    .hero h1{ max-width:18ch; }
-    .hero .card p{ max-width:60ch; }
-
-    /* единые межсекционные отступы */
-    section{ margin-top:var(--s-4); }
-    section:first-of-type{ margin-top:0; }
-    /* переопределим возможные inline-style margin-top:24px */
-    section[style*="margin-top:24px"]{ margin-top:var(--s-4) !important; }
-
-    /* кликабельные заголовки в бенто выглядят как обычный текст, но с hover */
-    .link-head{ color:inherit; text-decoration:none; border-bottom:1px dotted transparent }
-    .link-head:hover{ border-bottom-color:#3b4b86 }
-
-    /* футер/faq */
-    .faq details{background:#0e1430; border:1px solid #1b244a; border-radius:12px; padding:12px}
-    .faq summary{cursor:pointer; font-weight:600}
-    footer{opacity:.8; font-size:14px; padding:32px 0}
-
+    /* ========= responsive ========= */
     @media (max-width:960px){
-      .hero{ grid-template-columns:1fr; padding-block:var(--s-3); }
-      .b1,.b2,.b3,.b4,.b5{grid-column:span 12}
-      h1{ font-size:36px; }
+      .hero{grid-template-columns:1fr}
+      .benefits{grid-template-columns:1fr; gap:var(--space-3)}
+      .benefits .b1,.benefits .b2,.benefits .b3,.benefits .b4,.benefits .b5{grid-column:1/-1}
     }
   </style>
 </head>
@@ -168,17 +166,20 @@
       </div>
     </nav>
 
-    <!-- Hero -->
+    <!-- HERO -->
     <section class="hero" aria-labelledby="hero">
+      <!-- left -->
       <div class="card">
         <span class="badge">Справочный сервис • не юр. консультация</span>
         <h1 id="hero">Проверьте запрос <span class="muted">перед</span> поиском</h1>
-        <p>Вставьте текст запроса — сразу увидите оценку и ссылку на источник.</p>
+        <p class="muted">Вставьте текст запроса — сразу увидите оценку и ссылку на источник.</p>
+
         <div class="cta">
           <a class="btn" href="#try">Проверить запрос</a>
           <a class="btn outline" href="#videos">Смотреть как работает</a>
         </div>
-        <div class="chips" style="margin-top:10px">
+
+        <div class="chips">
           <span class="chip">Web</span>
           <span class="chip">Telegram-бот</span>
           <span class="chip">Источники обновляются</span>
@@ -186,75 +187,72 @@
         </div>
       </div>
 
-      <!-- Блок выгод -->
-      <div class="card bento" role="region" aria-label="Было/стало">
-        <div class="b1 stat">
-          <span class="dot bad" style="background:var(--bad)"></span>
+      <!-- right -->
+      <div class="card benefits" role="region" aria-label="Было/стало и преимущества">
+        <div class="b1" style="display:flex;align-items:center;gap:10px">
+          <span class="dot bad" style="width:10px;height:10px;border-radius:50%;background:var(--bad)"></span>
           <div>
             <div class="muted">Было</div>
             <div>Не знаю, можно ли искать эту тему</div>
           </div>
         </div>
-        <div class="b2 stat">
-          <span class="dot ok" style="background:var(--ok)"></span>
+
+        <div class="b2" style="display:flex;align-items:center;gap:10px">
+          <span class="dot ok" style="width:10px;height:10px;border-radius:50%;background:var(--ok)"></span>
           <div>
             <div class="muted">Стало</div>
-            <div class="kpi">Оценка заранее + ссылка на источник</div>
+            <div style="font-weight:800">Оценка заранее + ссылка на источник</div>
           </div>
         </div>
 
         <div class="b3">
-          <h3><a class="link-head" href="#how">Проверка до клика</a></h3>
+          <h3><a href="#how" style="color:inherit;text-decoration:none">Проверка до клика</a></h3>
           <p>Покажем статус риска: <span class="ok">нет</span> / <span class="bad">да</span>.</p>
         </div>
 
         <div class="b4">
-          <h3><a class="link-head" href="#how">Подсветка совпадений</a></h3>
+          <h3><a href="#how" style="color:inherit;text-decoration:none">Подсветка совпадений</a></h3>
           <p>Вы увидите, с чем совпал запрос, и ссылку на источник.</p>
         </div>
 
         <div class="b5">
-          <h3><a class="link-head" href="#faq">Запросы не сохраняются</a></h3>
+          <h3><a href="#faq" style="color:inherit;text-decoration:none">Запросы не сохраняются</a></h3>
           <p>По умолчанию мы не сохраняем ваши запросы. Можно использовать Telegram-бота.</p>
         </div>
       </div>
     </section>
 
     <!-- Как это работает -->
-    <section class="how" aria-labelledby="how" id="demo">
-      <div class="card">
-        <div class="num" aria-hidden="true">1</div>
-        <h2 id="how">Как это работает</h2>
-        <p><strong>Введите запрос</strong> на сайте или в Telegram-боте. Сверим с официальными списками и сообщим: есть ли риск — <span class="ok">нет</span> / <span class="bad">да</span>, и ссылку на источник.</p>
-      </div>
-      <div class="card">
-        <div class="num" aria-hidden="true">2</div>
-        <h2>Получите статус риска</h2>
-        <p>Покажем риск и <strong>конкретные совпадения</strong> со ссылками на источники — прозрачно и объяснимо.</p>
-      </div>
-      <div class="card">
-        <div class="num" aria-hidden="true">3</div>
-        <h2>Решите, что делать</h2>
-        <p>Если риска нет — переходите к поиску в Google/Yandex. Если риск есть — прочитайте источник и действуйте осторожно.</p>
-      </div>
+    <section class="card" aria-labelledby="how" id="demo">
+      <div class="num" aria-hidden="true" style="width:32px;height:32px;border-radius:50%; background:#2a3766; display:grid; place-items:center; font-weight:700">1</div>
+      <h2 id="how">Как это работает</h2>
+      <p><strong>Введите запрос</strong> на сайте или в Telegram-боте. Сверим с официальными списками и сообщим: есть ли риск — <span class="ok">нет</span> / <span class="bad">да</span>, и ссылку на источник.</p>
+      <div style="height:var(--space-3)"></div>
+      <div class="num" aria-hidden="true" style="width:32px;height:32px;border-radius:50%; background:#2a3766; display:grid; place-items:center; font-weight:700">2</div>
+      <h2>Получите статус риска</h2>
+      <p>Покажем риск и <strong>конкретные совпадения</strong> со ссылками на источники — прозрачно и объяснимо.</p>
+      <div style="height:var(--space-3)"></div>
+      <div class="num" aria-hidden="true" style="width:32px;height:32px;border-radius:50%; background:#2a3766; display:grid; place-items:center; font-weight:700">3</div>
+      <h2>Решите, что делать</h2>
+      <p>Если риска нет — переходите к поиску в Google/Yandex. Если риск есть — прочитайте источник и действуйте осторожно.</p>
     </section>
 
     <!-- Видео -->
-    <section class="grid" id="videos">
-      <h2>Короткие видео</h2>
+    <section class="card" id="videos">
+      <h2 style="margin:0 0 8px">Короткие видео</h2>
       <p class="muted">Замените VIDEO_ID на свои. Можно загрузить видео в YouTube «доступ по ссылке» и вставить код.</p>
-      <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="video" style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-3); margin-top:var(--space-3)">
         <div class="card video"><iframe title="Было → Стало" src="https://www.youtube.com/embed/VIDEO_ID_1" allowfullscreen></iframe></div>
         <div class="card video"><iframe title="Демо веб-версии" src="https://www.youtube.com/embed/VIDEO_ID_2" allowfullscreen></iframe></div>
         <div class="card video" style="grid-column:1/-1"><iframe title="Демо Telegram-бота" src="https://www.youtube.com/embed/VIDEO_ID_3" allowfullscreen></iframe></div>
       </div>
     </section>
 
-    <!-- Матрица (боль → решение) -->
+    <!-- Посадочная матрица -->
     <section class="card" aria-labelledby="matrix">
       <h2 id="matrix">Ищите безопасно: какие риски бывают — и как их избежать</h2>
       <p class="muted">Покажем риск до поиска и дадим ссылку на источник.</p>
-      <table class="table" aria-label="Матрица боли и решений">
+      <table class="table" aria-label="Матрица боли и решений" style="margin-top:8px">
         <thead><tr><th>Боль/Риск</th><th>Что даёт EM Check</th></tr></thead>
         <tbody>
           <tr><td>Страшно случайно перейти грань закона при обычном поиске</td><td>Предупреждение о риске до поиска + ссылка на источник</td></tr>
@@ -275,7 +273,7 @@
       </div>
     </section>
 
-    <!-- Каналы для статей -->
+    <!-- Где писать статьи -->
     <section class="card" aria-labelledby="articles">
       <h2 id="articles">Где написать статью и сослаться на лендинг</h2>
       <ul>
@@ -289,19 +287,19 @@
     </section>
 
     <!-- FAQ -->
-    <section class="faq grid" id="faq">
+    <section class="card" id="faq">
       <details class="card"><summary>Это юридическая консультация?</summary><p>Нет. Сервис справочный и не заменяет профессиональную юридическую помощь.</p></details>
-      <details class="card"><summary>Вы храните мои запросы?</summary><p>По умолчанию — нет. Можно включить анонимную телеметрию для улучшения качества.</p></details>
-      <details class="card"><summary>Откуда данные?</summary><p>Из открытых официальных источников. Каждое совпадение сопровождается ссылкой на источник.</p></details>
+      <details class="card" style="margin-top:12px"><summary>Вы храните мои запросы?</summary><p>По умолчанию — нет. Можно включить анонимную телеметрию для улучшения качества.</p></details>
+      <details class="card" style="margin-top:12px"><summary>Откуда данные?</summary><p>Из открытых официальных источников. Каждое совпадение сопровождается ссылкой на источник.</p></details>
     </section>
 
-    <footer class="wrap">
+    <footer class="wrap" style="padding:32px 0 0">
       <div class="muted">© 2025 EM Check • MIT License • <a href="#" class="muted" style="text-decoration:underline">Политика приватности</a></div>
     </footer>
   </div>
 
   <script>
-    // Плавный переход к секциям
+    // плавный скролл к секциям
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', e=>{
         const id=a.getAttribute('href').slice(1);
@@ -310,10 +308,10 @@
       });
     });
 
-    // Добавление UTM к внешним CTA (перед релизом сменить example.com)
+    // прокидываем UTM к внешним CTA (если они есть в URL)
     const params = new URLSearchParams(window.location.search);
-    const utm = ['utm_source','utm_medium','utm_campaign','utm_content']
-      .reduce((acc,k)=>{ if(params.get(k)) acc.set(k, params.get(k)); return acc; }, new URLSearchParams());
+    const utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content'];
+    const utm = utmKeys.reduce((acc,k)=>{ if(params.get(k)) acc.set(k, params.get(k)); return acc; }, new URLSearchParams());
     if(utm.toString()){
       document.querySelectorAll('a[rel="noopener"]').forEach(a=>{
         try{ const u=new URL(a.href); utm.forEach((v,k)=>u.searchParams.set(k,v)); a.href=u.toString(); }catch{}
